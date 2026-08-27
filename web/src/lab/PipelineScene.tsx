@@ -5,8 +5,8 @@
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
-import { STATION_X, KIND_COLOR, MAX_PACKETS, type NetPathEngine } from '../sim/sceneTypes'
+import { OrbitControls, Html } from '@react-three/drei'
+import { STATION_X, KIND_COLOR, MAX_PACKETS, STATION_NAMES, type NetPathEngine } from '../sim/sceneTypes'
 import { HeaderLayers, FlowPaths, QueueViz, SectionClipping } from './TrafficViz'
 
 // ── Shared materials ─────────────────────────────────────────────────────
@@ -23,6 +23,7 @@ function Station({ index }: { index: number }) {
   const opacity = usePipelineOpacity()
   const exploded = useExploded()
   const y = Math.sin(index * 1.7) * exploded * 2.2
+  const glowRef = useRef<THREE.Mesh>(null!)
 
   const mat = useMemo(() => {
     const m = MAT.housing()
@@ -30,6 +31,15 @@ function Station({ index }: { index: number }) {
     m.opacity = opacity
     return m
   }, [opacity])
+
+  // Active-station emissive pulse — draws the eye to the focused stage.
+  useFrame(({ clock }) => {
+    if (!selected || !glowRef.current) return
+    const p = 0.55 + Math.sin(clock.elapsedTime * 3) * 0.25
+    const gm = glowRef.current.material as THREE.MeshStandardMaterial
+    gm.emissiveIntensity = p
+    glowRef.current.scale.setScalar(1 + Math.sin(clock.elapsedTime * 3) * 0.06)
+  })
 
   return (
     <group position={[x, y, 0]}>
@@ -51,11 +61,31 @@ function Station({ index }: { index: number }) {
         <boxGeometry args={[5.8, 0.22, 4.8]} />
       </mesh>
       {selected && (
-        <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, -3.35, 0]}>
+        <mesh ref={glowRef} rotation={[Math.PI / 2, 0, 0]} position={[0, -3.35, 0]}>
           <torusGeometry args={[1.15, 0.05, 10, 40]} />
-          <meshBasicMaterial color="#f2c45f" />
+          <meshStandardMaterial
+            color="#f2c45f"
+            emissive="#f2c45f"
+            emissiveIntensity={0.6}
+            toneMapped={false}
+          />
         </mesh>
       )}
+      <Html
+        position={[0, 3.4, 0]}
+        center
+        distanceFactor={28}
+        occlude={false}
+        style={{ pointerEvents: 'none' }}
+      >
+        <div className={`select-none whitespace-nowrap rounded border px-2 py-0.5 font-mono text-[10px] tracking-wide backdrop-blur ${
+          selected
+            ? 'border-[#f2c45f]/60 bg-[rgba(242,196,95,0.12)] text-[#f2c45f]'
+            : 'border-[#30363d] bg-[rgba(7,9,12,0.7)] text-[#9d978a]'
+        }`}>
+          {STATION_NAMES[index]}
+        </div>
+      </Html>
     </group>
   )
 }
@@ -212,6 +242,8 @@ function CameraRig() {
     <OrbitControls
       target={target}
       enablePan={false}
+      enableDamping
+      dampingFactor={0.08}
       minDistance={14}
       maxDistance={110}
       onStart={() => { userInteracting.current = true }}
@@ -241,10 +273,17 @@ export function PipelineScene({ engine, isMobile }: { engine: NetPathEngine; isM
         gl.setClearColor('#05070a')
       }}
     >
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[18, 30, 20]} intensity={1.1} color="#cfe8ff" />
-      <directionalLight position={[-20, 12, -14]} intensity={0.4} color="#b08d57" />
+      <ambientLight intensity={0.45} />
+      <directionalLight position={[18, 30, 20]} intensity={1.3} color="#cfe8ff" />
+      <directionalLight position={[-20, 12, -14]} intensity={0.5} color="#b08d57" />
+      <spotLight position={[0, 40, 10]} angle={0.6} penumbra={0.8} intensity={0.6} color="#6fc7e8" />
       <pointLight position={[STATION_X[4], 8, 6]} intensity={30} distance={30} color="#39d353" />
+
+      {/* Reflective dark floor — adds depth so the pipeline reads as a stage */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -4.4, 0]} receiveShadow>
+        <planeGeometry args={[200, 90]} />
+        <meshStandardMaterial color="#0a0e14" roughness={0.35} metalness={0.65} />
+      </mesh>
 
       <gridHelper args={[140, 46, '#1c2530', '#12181f']} position={[0, -4.2, 0]} />
 

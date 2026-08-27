@@ -13,7 +13,6 @@ import { ChallengeModal } from './ChallengeModal'
 import { setMuted, disposeAudio, sfx } from './audio'
 import {
   useIsMobile,
-  useDesktopPanelVisibility,
   MobileBars,
   DesktopHint,
 } from './MobileLayer'
@@ -163,6 +162,69 @@ function SimDriver({ engine }: { engine: NetPathEngine }) {
 
 // ── Page ─────────────────────────────────────────────────────────────────
 
+/**
+ * Desktop-only collapsible panel shell. On desktop (md+) it renders the
+ * child panel; when collapsed it shrinks to a thin edge rail with a single
+ * expand button so the 3D canvas reclaims the full width. On mobile it always
+ * renders the child (the bottom drawers handle show/hide there).
+ */
+function DesktopPanelSide({ position, children }: {
+  position: 'left' | 'right'
+  children: React.ReactNode
+}) {
+  const isMobile = useIsMobile()
+  const collapsed =
+    position === 'left'
+      ? useLab((s) => s.desktopControlCollapsed)
+      : useLab((s) => s.desktopReadoutCollapsed)
+  const toggle =
+    position === 'left'
+      ? useLab((s) => s.toggleDesktopControl)
+      : useLab((s) => s.toggleDesktopReadout)
+
+  if (isMobile) return <>{children}</>
+
+  const collapsedCls =
+    position === 'left'
+      ? 'left-3 top-28 z-20'
+      : 'right-3 top-28 z-20'
+  const expandedWrapperCls =
+    position === 'left'
+      ? 'absolute bottom-4 left-4 top-28 z-20'
+      : 'absolute right-4 top-28 z-20'
+
+  if (collapsed) {
+    return (
+      <button
+        onClick={toggle}
+        aria-label={position === 'left' ? 'Expand controls' : 'Expand station data'}
+        aria-expanded={false}
+        className={`pointer-events-auto absolute ${collapsedCls} flex h-10 w-10 items-center justify-center rounded-lg border border-[#30363d] bg-[rgba(7,9,12,0.84)] font-mono text-sm text-[#9d978a] backdrop-blur transition-colors hover:border-[#b08d57] hover:text-[#e8e0cc]`}
+      >
+        {position === 'left' ? '›' : '‹'}
+      </button>
+    )
+  }
+
+  return (
+    <div className={expandedWrapperCls}>
+      <div className="relative h-full">
+        {children}
+        <button
+          onClick={toggle}
+          aria-label={position === 'left' ? 'Collapse controls' : 'Collapse station data'}
+          aria-expanded={true}
+          className={`pointer-events-auto absolute -top-0 ${
+            position === 'left' ? '-right-3' : '-left-3'
+          } flex h-8 w-8 items-center justify-center rounded-full border border-[#30363d] bg-[rgba(7,9,12,0.92)] font-mono text-xs text-[#9d978a] backdrop-blur transition-colors hover:border-[#b08d57] hover:text-[#e8e0cc]`}
+        >
+          {position === 'left' ? '‹' : '›'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function LabPage() {
   const hasWebgl = useMemo(webglAvailable, [])
   const engine = useMemo(() => new NetPathEngine(), [])
@@ -171,7 +233,6 @@ export default function LabPage() {
     Array<{ scenario: string; correct: boolean }>
   >([])
   const isMobile = useIsMobile()
-  const { hideControl, hideReadout } = useDesktopPanelVisibility()
 
   // Audio context lifecycle — resume/unmute via store, dispose on unmount
   const soundEnabled = useLab((s) => s.soundEnabled)
@@ -193,18 +254,18 @@ export default function LabPage() {
       {hasWebgl && (
         <>
           <SimDriver engine={engine} />
-          {/* Desktop-absolute panels — hidden on mobile (drawers replace them) */}
-          <div className={hideControl ? 'hidden md:block' : ''}>
+          {/* Desktop-absolute panels — collapsible to reclaim 3D canvas space */}
+          <DesktopPanelSide position="left">
             <ControlPanel
               engine={engine}
               challengeOpen={challengeOpen}
               onToggleChallenge={() => setChallengeOpen((v) => !v)}
               challengeResults={challengeResults}
             />
-          </div>
-          <div className={hideReadout ? 'hidden md:block' : ''}>
+          </DesktopPanelSide>
+          <DesktopPanelSide position="right">
             <StationReadout />
-          </div>
+          </DesktopPanelSide>
           <ChallengeModal
             engine={engine}
             open={challengeOpen}

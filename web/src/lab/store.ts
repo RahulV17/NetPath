@@ -88,6 +88,10 @@ interface LabState {
   isReadoutOpen: boolean
   isDesktopHintVisible: boolean
 
+  // ── Desktop panel collapse (Approach A: reclaim 3D canvas space) ──
+  desktopControlCollapsed: boolean
+  desktopReadoutCollapsed: boolean
+
   // ── Live Engine bridge (attaches readouts to the Python backend) ──
   liveEngineAttached: boolean
   /** 'off' → not attached · 'connecting' → WS handshake/retry · 'live' → snapshots flowing */
@@ -125,6 +129,10 @@ interface LabState {
   openControlPanel: (isMobile: boolean) => void
   openReadout: (isMobile: boolean) => void
   dismissDesktopHint: () => void
+  /** Toggle desktop control panel collapse (reclaims 3D canvas space). */
+  toggleDesktopControl: () => void
+  /** Toggle desktop readout panel collapse. */
+  toggleDesktopReadout: () => void
   setLiveEngineAttached: (v: boolean) => void
   setLiveEngineStatus: (st: 'off' | 'connecting' | 'live') => void
   resetToDefault: () => void
@@ -174,6 +182,8 @@ export const useLab = create<LabState>((set, get) => ({
   isControlPanelOpen: false,
   isReadoutOpen: false,
   isDesktopHintVisible: true,
+  desktopControlCollapsed: false,
+  desktopReadoutCollapsed: false,
   liveEngineAttached: false,
   liveEngineStatus: 'off',
   livePps: 0,
@@ -232,6 +242,8 @@ export const useLab = create<LabState>((set, get) => ({
     } catch { /* private mode */ }
     set({ isDesktopHintVisible: false })
   },
+  toggleDesktopControl: () => set((s) => ({ desktopControlCollapsed: !s.desktopControlCollapsed })),
+  toggleDesktopReadout: () => set((s) => ({ desktopReadoutCollapsed: !s.desktopReadoutCollapsed })),
   setLiveEngineAttached: (v) =>
     set({ liveEngineAttached: v, liveEngineStatus: v ? 'connecting' : 'off' }),
   setLiveEngineStatus: (st) => set({ liveEngineStatus: st }),
