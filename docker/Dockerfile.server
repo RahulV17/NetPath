@@ -1,0 +1,17 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    iproute2 \
+    iputils-ping \
+    net-tools \
+    tcpdump \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY pyproject.toml ./
+COPY src/ ./src/
+COPY docker/ ./docker/
+RUN pip install --no-cache-dir -e ".[dev]"
+
+ENV PYTHONPATH=/app/src
