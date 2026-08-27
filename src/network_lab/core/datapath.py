@@ -13,12 +13,11 @@ import hashlib
 import time
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import Dict, List, Optional, Tuple
 
-from .ml_classifier import FlowFeatures, FlowTable, TrafficClassifier, TrafficClass
-from .hw_offload import OffloadEngine, OffloadTarget, PacketProfile, profile_from_parsed_packet
-from .parser import ParsedPacket, IPv4, IPv6, TCP, UDP, ARP, VLAN, VXLAN, GRE
-from .qos import DSCP, HTBScheduler, Priority, PriorityScheduler, TokenBucket, TrafficManager
+from .hw_offload import OffloadEngine, OffloadTarget, profile_from_parsed_packet
+from .ml_classifier import FlowTable, TrafficClass, TrafficClassifier
+from .parser import ParsedPacket
+from .qos import TrafficManager
 
 
 class ForwardAction(Enum):
@@ -38,16 +37,16 @@ FwdAction = ForwardAction
 class PacketMeta:
     """Metadata attached to each packet as it traverses the data path."""
     ingress_iface: str
-    egress_iface: Optional[str] = None
+    egress_iface: str | None = None
     action: ForwardAction = ForwardAction.FORWARD
-    offload_target: Optional[OffloadTarget] = None
-    traffic_class: Optional[TrafficClass] = None
+    offload_target: OffloadTarget | None = None
+    traffic_class: TrafficClass | None = None
     reason: str = ""
-    flood_ports: List[int] = field(default_factory=list)
+    flood_ports: list[int] = field(default_factory=list)
 
     # Timing for performance analysis
     ingress_ts: float = field(default_factory=time.time)
-    egress_ts: Optional[float] = None
+    egress_ts: float | None = None
 
     @property
     def latency_us(self) -> float:
@@ -119,15 +118,13 @@ class Bridge:
             if pid == exclude_port or iface.state != InterfaceState.UP:
                 continue
             if vlan is not None:
-                if iface.vlan == vlan:
-                    ports.append(pid)
-                elif vlan in iface.allowed_vlans:
+                if iface.vlan == vlan or vlan in iface.allowed_vlans:
                     ports.append(pid)
             else:
                 ports.append(pid)
         return ports
 
-    def forward(self, pkt: ParsedPacket, rx_port: int) -> Tuple[ForwardAction, list[int], str]:
+    def forward(self, pkt: ParsedPacket, rx_port: int) -> tuple[ForwardAction, list[int], str]:
         """Returns (action, ports, reason)."""
         if pkt.ethernet is None:
             return ForwardAction.DROP, [], "no ethernet header"
@@ -217,7 +214,7 @@ class Router:
                     return route
         return None
 
-    def forward(self, pkt: ParsedPacket) -> Tuple[ForwardAction, Optional[str], str]:
+    def forward(self, pkt: ParsedPacket) -> tuple[ForwardAction, str | None, str]:
         """Returns (action, egress_iface, reason)."""
         if pkt.ipv4:
             return self._forward_ipv4(pkt)
@@ -225,7 +222,7 @@ class Router:
             return self._forward_ipv6(pkt)
         return ForwardAction.DROP, None, "no L3 header"
 
-    def _forward_ipv4(self, pkt: ParsedPacket) -> Tuple[ForwardAction, Optional[str], str]:
+    def _forward_ipv4(self, pkt: ParsedPacket) -> tuple[ForwardAction, str | None, str]:
         ipv4 = pkt.ipv4
         if ipv4 is None:
             return ForwardAction.DROP, None, "no IPv4"
@@ -244,7 +241,7 @@ class Router:
 
         return ForwardAction.FORWARD, route.iface, f"routed to {next_hop} via {route.iface}"
 
-    def _forward_ipv6(self, pkt: ParsedPacket) -> Tuple[ForwardAction, Optional[str], str]:
+    def _forward_ipv6(self, pkt: ParsedPacket) -> tuple[ForwardAction, str | None, str]:
         ipv6 = pkt.ipv6
         if ipv6 is None:
             return ForwardAction.DROP, None, "no IPv6"
@@ -322,8 +319,8 @@ class DataPathEngine:
         self.offload_engine = OffloadEngine() if enable_hw_offload else None
 
         # ACL rules (from PyFlow)
-        self.acls: List[Tuple[str, str, int, int, int, str]] = []
-        self._acl_index: Dict[Optional[Tuple[int, int]], List[Tuple]] = {None: []}
+        self.acls: list[tuple[str, str, int, int, int, str]] = []
+        self._acl_index: dict[tuple[int, int] | None, list[tuple]] = {None: []}
 
         # Stats
         self.stats = {

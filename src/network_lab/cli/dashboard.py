@@ -6,38 +6,26 @@ and displays ML + HW offload stats.
 
 from __future__ import annotations
 
-import asyncio
 import time
 from typing import Any
 
-from rich.console import Console
-from rich.live import Live
 from rich.panel import Panel
-from rich.table import Table
 from rich.text import Text
-from textual import on
 from textual.app import App, ComposeResult
-from textual.containers import Container, Horizontal, Vertical
+from textual.containers import Horizontal, Vertical
 from textual.reactive import reactive
 from textual.screen import Screen
 from textual.widgets import (
-    Button,
     DataTable,
     Footer,
     Header,
-    Input,
-    Label,
     Static,
     TabbedContent,
     TabPane,
 )
 
-from ..core.datapath import DataPathEngine, ForwardAction, Interface
+from ..core.datapath import DataPathEngine, Interface
 from ..core.generator import GeneratorConfig, TrafficGenerator
-from ..core.parser import ParsedPacket
-from ..core.ml_classifier import TrafficClass
-from ..core.hw_offload import OffloadTarget
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # DASHBOARD SCREEN
@@ -190,7 +178,7 @@ class StatCard(Static):
 class MLFlowTable(DataTable):
     """Live ML flow classification table."""
 
-    engine: NetPathEngine | None = None
+    engine: DataPathEngine | None = None
 
     def on_mount(self) -> None:
         self.add_columns("Source", "Destination", "Proto", "Packets", "Class")
@@ -328,7 +316,7 @@ class HWOffloadStats(_LivePanel):
         text.append(f"HW Accelerated: {self._bar(hw / total, self.BAR_WIDTH)} {hw}\n")
         text.append(f"CPU Exceptions: {self._bar(cpu_exc / total, self.BAR_WIDTH)} {cpu_exc}\n")
         text.append(f"Cache Util:     {self._bar(cache_util, self.BAR_WIDTH)} {cache_util * 100:.1f}%\n")
-        text.append(f"Offload Rate:   ", )
+        text.append("Offload Rate:   ", )
         rate_style = "green" if rate > 0.5 else ("yellow" if rate > 0.2 else "red")
         text.append(f"{self._bar(rate, self.BAR_WIDTH)}", style=rate_style)
         text.append(f" {rate * 100:.1f}%\n")

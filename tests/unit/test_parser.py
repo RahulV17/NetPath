@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import pytest
-from hypothesis import given, strategies as st
+from hypothesis import given
+from hypothesis import strategies as st
 
 from network_lab.core.parser import (
     ARP,
@@ -11,17 +12,13 @@ from network_lab.core.parser import (
     ICMP,
     TCP,
     UDP,
-    IPv4,
-    IPv6,
     VLAN,
     VXLAN,
     Ethernet,
-    GRE,
+    IPv4,
     ParsedPacket,
     parse_packet,
-    parse_wifi_frame,
 )
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # ETHERNET
@@ -386,4 +383,3 @@ class TestFuzz:
         assert tcp.flags == flags
 
 
-import struct

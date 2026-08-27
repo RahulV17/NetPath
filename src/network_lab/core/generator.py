@@ -6,35 +6,29 @@ import asyncio
 import math
 import random
 import time
+from collections.abc import AsyncIterator, Callable
 from dataclasses import dataclass
-from typing import AsyncIterator, Callable
 
 from scapy.all import (
     ARP,
     BOOTP,
     DHCP,
-    DNS,
-    DNSQR,
+    GRE,
+    ICMP,
+    IP,
+    TCP,
+    UDP,
+    VXLAN,
     Dot11,
     Dot11Beacon,
     Dot11Elt,
     Ether,
-    GRE,
-    ICMP,
-    IP,
     IPv6,
-    TCP,
-    UDP,
-    VXLAN,
     RandMAC,
-    RandIP,
     Raw,
-    conf,
-    sendp,
-    sr1,
 )
 
-from .parser import parse_packet, ParsedPacket
+from .parser import ParsedPacket, parse_packet
 
 
 # ── Configuration ────────────────────────────────────────────────────────
@@ -249,7 +243,6 @@ class TrafficGenerator:
         self._start_time = time.time()
         if self.config.rate_pps <= 0:
             raise ValueError("rate_pps must be positive")
-        mean_interval = 1.0 / self.config.rate_pps
 
         # Burst envelope: slow sinusoidal modulation of the mean rate
         # (±30%) so even minute-scale averages drift realistically.

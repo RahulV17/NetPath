@@ -7,7 +7,7 @@ Run: python -m network_lab.demo
 import asyncio
 import time
 
-from network_lab import DataPathEngine, TrafficClass, OffloadTarget
+from network_lab import DataPathEngine
 from network_lab.core.generator import PacketCrafter
 from network_lab.core.parser import parse_packet
 
@@ -71,13 +71,13 @@ async def main():
 
     if 'offload' in stats:
         off = stats['offload']
-        print(f"\n[Offload]")
+        print("\n[Offload]")
         print(f"  HW accelerated: {off['hw_accelerated']}")
         print(f"  CPU exceptions: {off['cpu_exceptions']}")
         print(f"  HW cache util:  {off['hw_cache_utilization']:.1%}")
         print(f"  Offload rate:   {off['hw_offload_rate']:.1%}")
 
-    print(f"\n[ML Classifier]")
+    print("\n[ML Classifier]")
     print(f"  Flow table size: {engine.flow_table.size}")
     print(f"  Classifier enabled: {engine.enable_ml}")
 

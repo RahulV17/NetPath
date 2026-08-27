@@ -2,21 +2,19 @@
 
 from __future__ import annotations
 
-import pytest
-
+from network_lab.core.parser import parse_packet
 from network_lab.core.qos import (
     DSCP,
     DualTokenBucket,
     FlowClassifier,
     FlowRule,
-    HTBScheduler,
     HTBClass,
+    HTBScheduler,
     Priority,
     PriorityScheduler,
     TokenBucket,
     TrafficManager,
 )
-from network_lab.core.parser import parse_packet
 
 
 class TestTokenBucket:

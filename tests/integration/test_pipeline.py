@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-import pytest
 import asyncio
 
-from network_lab.core.datapath import Bridge, DataPathEngine, ForwardAction, Interface
+from network_lab.core.datapath import DataPathEngine, ForwardAction, Interface
 from network_lab.core.generator import GeneratorConfig, PacketCrafter, TrafficGenerator
 from network_lab.core.parser import parse_packet, parse_wifi_frame
 from network_lab.core.qos import TrafficManager

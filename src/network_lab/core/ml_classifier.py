@@ -12,7 +12,6 @@ import time
 from collections import deque
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import Dict, List, Optional
 
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
@@ -79,11 +78,11 @@ class TrafficClassifier:
     """
 
     def __init__(self, retrain_interval: int = 500):
-        self.model: Optional[RandomForestClassifier] = None
+        self.model: RandomForestClassifier | None = None
         self.scaler = StandardScaler()
         self.retrain_interval = retrain_interval
-        self._samples: List[np.ndarray] = []
-        self._labels: List[int] = []
+        self._samples: list[np.ndarray] = []
+        self._labels: list[int] = []
         self._sample_count = 0
         self._lock = asyncio.Lock()
 
@@ -217,8 +216,8 @@ class FlowTable:
     """Thread-safe flow table with automatic expiry."""
 
     def __init__(self, timeout_sec: float = 60.0):
-        self._flows: Dict[str, FlowFeatures] = {}
-        self._classifications: Dict[str, TrafficClass] = {}
+        self._flows: dict[str, FlowFeatures] = {}
+        self._classifications: dict[str, TrafficClass] = {}
         self._timeout = timeout_sec
         self._lock = asyncio.Lock()
 
@@ -260,7 +259,7 @@ class FlowTable:
         async with self._lock:
             self._classifications[key] = tc
 
-    async def get_classification(self, flow: FlowFeatures) -> Optional[TrafficClass]:
+    async def get_classification(self, flow: FlowFeatures) -> TrafficClass | None:
         key = self._flow_key(flow.src_ip, flow.dst_ip, flow.src_port,
                             flow.dst_port, flow.protocol)
         async with self._lock:
@@ -283,7 +282,7 @@ class FlowTable:
     def size(self) -> int:
         return len(self._flows)
 
-    def list_flows(self) -> List[FlowFeatures]:
+    def list_flows(self) -> list[FlowFeatures]:
         """Snapshot of active flows (API/UI safe).
 
         Sync public accessor over an asyncio-locked dict. We copy the
@@ -302,8 +301,8 @@ class FlowTable:
         with their ML classifications resolved from _classifications.
         """
         now = time.time()
-        classified: Dict[str, int] = {}
-        rows: List[dict] = []
+        classified: dict[str, int] = {}
+        rows: list[dict] = []
         # Iterate a snapshot under the lock — the live dict mutates from
         # other coroutines (update/get_or_create), which raised
         # "dictionary changed size during iteration" under load.

@@ -14,9 +14,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Optional, Set
 
-from .parser import ParsedPacket, IPv4, IPv6, TCP, UDP, VLAN, VXLAN, GRE
+from .parser import ParsedPacket
 
 
 class OffloadTarget(Enum):
@@ -41,7 +40,7 @@ class PacketComplexity(Enum):
 class PacketProfile:
     """Key attributes used for offload decisions."""
     ethertype: int              # 0x0800=IPv4, 0x86DD=IPv6, 0x8100=VLAN
-    ip_protocol: Optional[int]  # 6=TCP, 17=UDP, 1=ICMP, etc.
+    ip_protocol: int | None  # 6=TCP, 17=UDP, 1=ICMP, etc.
     has_vlan: bool
     is_fragment: bool
     has_ip_options: bool
@@ -82,7 +81,7 @@ class OffloadEngine:
         self.hw_supports_qos = hw_supports_qos
 
         # Simulated HW flow table
-        self._hw_flows: Set[str] = set()
+        self._hw_flows: set[str] = set()
         self._cpu_exceptions: int = 0
         self._hw_accelerated: int = 0
 

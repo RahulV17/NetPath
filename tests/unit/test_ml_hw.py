@@ -3,21 +3,22 @@
 from __future__ import annotations
 
 import asyncio
-import pytest
-import numpy as np
 
-from network_lab.core.ml_classifier import (
-    FlowFeatures,
-    FlowTable,
-    TrafficClassifier,
-    TrafficClass,
-)
+import numpy as np
+import pytest
+
 from network_lab.core.hw_offload import (
     OffloadEngine,
     OffloadTarget,
     PacketComplexity,
     PacketProfile,
     profile_from_parsed_packet,
+)
+from network_lab.core.ml_classifier import (
+    FlowFeatures,
+    FlowTable,
+    TrafficClass,
+    TrafficClassifier,
 )
 from network_lab.core.parser import parse_packet
 

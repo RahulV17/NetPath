@@ -10,19 +10,14 @@ import asyncio
 import time
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
-from typing import AsyncIterator
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from network_lab.core.datapath import DataPathEngine, ForwardAction
+from network_lab.core.datapath import DataPathEngine
 from network_lab.core.generator import GeneratorConfig, TrafficGenerator
 from network_lab.core.parser import ParsedPacket
-from network_lab.core.qos import DSCP, Priority, TrafficManager
-from network_lab.core.ml_classifier import TrafficClass
-from network_lab.core.hw_offload import OffloadTarget
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # MODELS

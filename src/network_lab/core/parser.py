@@ -8,7 +8,7 @@ IPv4, IPv6, TCP, UDP, ICMP, DHCP, 802.11 WiFi).
 from __future__ import annotations
 
 import struct
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import IntEnum
 from typing import ClassVar
 

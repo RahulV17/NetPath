@@ -6,15 +6,12 @@ and priority queue scheduling.
 
 from __future__ import annotations
 
-import asyncio
-import heapq
 import time
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from enum import IntEnum
-from typing import Callable, Protocol
 
-from .parser import ParsedPacket, TCP, UDP, IPv4
+from .parser import ParsedPacket
 
 
 # ── DSCP Classes ─────────────────────────────────────────────────────────

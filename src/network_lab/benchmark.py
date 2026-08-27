@@ -6,10 +6,9 @@ Run: python -m network_lab.benchmark
 
 import asyncio
 import time
-from collections import defaultdict
 
-from network_lab import DataPathEngine, OffloadTarget, TrafficClass
-from network_lab.core.generator import PacketCrafter, TrafficGenerator, GeneratorConfig
+from network_lab import DataPathEngine
+from network_lab.core.generator import PacketCrafter
 from network_lab.core.parser import parse_packet
 
 
@@ -121,7 +120,7 @@ async def benchmark_qos(iterations: int = 5000) -> dict:
 
 async def benchmark_ml(iterations: int = 100) -> dict:
     """Benchmark ML classification."""
-    from network_lab.core.ml_classifier import TrafficClassifier, FlowFeatures
+    from network_lab.core.ml_classifier import FlowFeatures, TrafficClassifier
     classifier = TrafficClassifier()
 
     flows = []

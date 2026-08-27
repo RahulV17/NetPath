@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
-import pytest
-
-from network_lab.core.datapath import Bridge, DataPathEngine, ForwardAction, Interface, InterfaceState, Router
+from network_lab.core.datapath import (
+    Bridge,
+    DataPathEngine,
+    ForwardAction,
+    Interface,
+    Router,
+)
 from network_lab.core.parser import parse_packet
 
 
