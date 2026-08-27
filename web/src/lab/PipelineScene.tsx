@@ -217,9 +217,9 @@ function Packets({ engine }: { engine: NetPathEngine }) {
 
 const CAMERA_PRESETS: Record<string, [number, number, number]> = {
   overview: [0, 22, 62],
-  section: [30, 10, 34],
-  parser: [STATION_X[1], 6, 18],
-  classifier: [STATION_X[3], 6, 18],
+  section: [24, 12, 40],
+  parser: [STATION_X[1], 8, 24],
+  classifier: [STATION_X[3], 8, 24],
   offload: [STATION_X[4], 10, 24],
   free: [0, 22, 62],
 }

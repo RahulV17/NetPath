@@ -196,7 +196,7 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
         </div>
       </Section>
 
-      <CollapsibleSection title="Environment" defaultOpen={false}>
+      <CollapsibleSection title="Environment" defaultOpen={true}>
         <Slider
           label="Packet Size Distribution"
           value={s.sizeDist}

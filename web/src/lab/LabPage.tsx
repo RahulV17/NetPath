@@ -160,6 +160,30 @@ function SimDriver({ engine }: { engine: NetPathEngine }) {
   return null
 }
 
+// ── Help chip ──────────────────────────────────────────────────────────────
+
+function HelpChip() {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="fixed bottom-3 left-3 z-50">
+      {open && (
+        <div className="mb-2 rounded-md border border-[#1c2530] bg-[#0b0f14]/95 px-3 py-2 text-xs text-[#9d978a] shadow-lg">
+          <div className="mb-1 font-mono text-[#e8e0cc]">Controls</div>
+          <div>Drag to orbit</div>
+          <div>Scroll to zoom</div>
+          <div>H toggles side panels</div>
+        </div>
+      )}
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="rounded-full border border-[#1c2530] bg-[#0b0f14]/80 px-2 py-1 font-mono text-xs text-[#e8e0cc] hover:border-[#f2c45f]"
+      >
+        ?
+      </button>
+    </div>
+  )
+}
+
 // ── Page ─────────────────────────────────────────────────────────────────
 
 /**
@@ -292,6 +316,7 @@ export default function LabPage() {
       {isMobile && <DesktopHint />}
 
       <Disclaimer />
+      <HelpChip />
     </div>
   )
 }
