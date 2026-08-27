@@ -135,6 +135,7 @@ export class NetPathEngine {
   private tokens = BUCKET_BYTES_DEFAULT
   private lastTokenRefill = 0
   private spawnDebt = 0
+  dropEvents: { station: number; bornAtSec: number }[] = []
 
   /** Default ruleset â€” baseline drops give Chapter 2 real behavior. */
   static defaultAclRules(): AclRule[] {
@@ -359,6 +360,7 @@ export class NetPathEngine {
           p.dropStation = 2
           p.active = false
           this.stats.dropped++
+          this.dropEvents.push({ station: 2, bornAtSec: now })
           continue
         }
       }

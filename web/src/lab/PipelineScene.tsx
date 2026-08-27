@@ -76,8 +76,6 @@ function Station({ index }: { index: number }) {
         position={[0, 3.4, 0]}
         center
         distanceFactor={28}
-        occlude={false}
-        style={{ pointerEvents: 'none' }}
       >
         <div className={`select-none whitespace-nowrap rounded border px-2 py-0.5 font-mono text-[10px] tracking-wide backdrop-blur ${
           selected
@@ -167,6 +165,45 @@ function FastPathArc() {
     <mesh geometry={geom}>
       <meshBasicMaterial color="#39d353" transparent opacity={0.4} />
     </mesh>
+  )
+}
+
+function DropSparks({ engine }: { engine: NetPathEngine }) {
+  const meshRef = useRef<THREE.InstancedMesh>(null!)
+  const dummy = useMemo(() => new THREE.Object3D(), [])
+  const color = useMemo(() => new THREE.Color(), [])
+
+  useFrame(() => {
+    const now = performance.now() / 1000
+    const drops = engine.dropEvents
+    const active = drops.filter((d) => now - d.bornAtSec < 0.8)
+    engine.dropEvents = active.slice(-50)
+    const mesh = meshRef.current
+    for (let i = 0; i < 8; i++) {
+      if (i < active.length) {
+        const d = active[i]
+        const age = now - d.bornAtSec
+        dummy.position.set(STATION_X[d.station], 1.5 + age * 4, 0)
+        dummy.scale.setScalar(Math.max(0.01, (1 - age / 0.8) * 0.6))
+      } else {
+        dummy.position.set(0, -999, 0)
+        dummy.scale.setScalar(0)
+      }
+      dummy.updateMatrix()
+      mesh.setMatrixAt(i, dummy.matrix)
+      color.set(i < active.length ? '#ff6b6b' : '#000000')
+      mesh.setColorAt(i, color)
+    }
+    mesh.count = Math.min(active.length, 8)
+    mesh.instanceMatrix.needsUpdate = true
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true
+  })
+
+  return (
+    <instancedMesh ref={meshRef} args={[undefined, undefined, 8]} frustumCulled={false}>
+      <sphereGeometry args={[0.42, 10, 8]} />
+      <meshBasicMaterial toneMapped={false} transparent opacity={0.9} />
+    </instancedMesh>
   )
 }
 
@@ -298,6 +335,7 @@ export function PipelineScene({ engine, isMobile }: { engine: NetPathEngine; isM
       <FlowPaths />
       <QueueViz engine={engine} />
       <SectionClipping />
+      <DropSparks engine={engine} />
 
       <CameraRig />
     </Canvas>
