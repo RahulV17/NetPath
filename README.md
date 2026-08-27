@@ -277,7 +277,7 @@ Portfolio project demonstrating networking data-path engineering: protocol parsi
 | **Prioritized Roadmap** | Demonstrates product thinking |
 | **Contributing guidelines** | Lowers barrier for collaboration |
 
-The original README was already strong technically — these additions make it **recruiter-friendly** and **contributor-ready** while preserving the deep technical substance that makes it stand out.
+---
 
 ## License
 
