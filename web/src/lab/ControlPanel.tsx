@@ -238,7 +238,7 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
         </div>
       </Section>
 
-      <Section title="Follow One Packet">
+      <CollapsibleSection title="Follow One Packet" defaultOpen={true}>
         <Toggle
           label={followActive ? 'Tracing packet…' : 'Trace a packet'}
           on={followActive}
@@ -251,7 +251,7 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
             }
           }}
         />
-        {tracedInfo && (
+        {followActive && tracedInfo && (
           <div className="mt-2 grid grid-cols-2 gap-x-2 font-mono text-[10px]" aria-live="polite">
             <span className="text-[#9d978a]">Station</span>
             <span className="text-right text-[#e8e0cc]">{tracedInfo.station} · {STATION_NAMES[tracedInfo.station]}</span>
@@ -260,10 +260,10 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
             <span className="text-[#9d978a]">Size</span>
             <span className="text-right text-[#e8e0cc]">{tracedInfo.packetSizeB} B</span>
             <span className="text-[#9d978a]">Latency</span>
-            <span className="text-right text-[#e8e0cc]">{tracedInfo.latencyMs.toFixed(1)} ms</span>
+            <span className="text-right text-[#e8e0cc]">{tracedInfo.latencyMs.toFixed(1)} ms (real)</span>
           </div>
         )}
-      </Section>
+      </CollapsibleSection>
 
       <Section title="Camera">
         <div className="grid grid-cols-2 gap-2">

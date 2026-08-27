@@ -75,7 +75,7 @@ export function StationReadout() {
           <dd className="text-right text-[#ffa657]">{r?.queueDepth ?? 0}</dd>
 
           <dt className="text-[#9d978a]">Latency</dt>
-          <dd className="text-right text-[#e8e0cc]">{r ? `${r.latencyMs.toFixed(1)} ms` : '—'}</dd>
+          <dd className="text-right text-[#e8e0cc]">{r ? `${r.latencyMs.toFixed(1)} ms (est.)` : '—'}</dd>
         </dl>
       </div>
     </aside>
