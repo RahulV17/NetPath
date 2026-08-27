@@ -19,6 +19,23 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
+function CollapsibleSection({ title, children, defaultOpen = true }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen)
+  return (
+    <section className="border-b border-[#1c2530]">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between px-4 py-2.5 text-left font-mono text-[10px] tracking-[0.25em] text-[#b08d57] hover:text-[#e8e0cc]"
+        aria-expanded={open}
+      >
+        {title.toUpperCase()}
+        <span className="text-[#9d978a]">{open ? '▾' : '▸'}</span>
+      </button>
+      {open && <div className="px-4 pb-3">{children}</div>}
+    </section>
+  )
+}
+
 function Slider({
   label, value, min = 0, max = 100, step = 1, suffix = '', onChange,
 }: {
@@ -179,7 +196,7 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
         </div>
       </Section>
 
-      <Section title="Environment">
+      <CollapsibleSection title="Environment" defaultOpen={false}>
         <Slider
           label="Packet Size Distribution"
           value={s.sizeDist}
@@ -205,13 +222,13 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
         >
           Reset to Default
         </button>
-      </Section>
+      </CollapsibleSection>
 
-      <Section title="Model">
+      <CollapsibleSection title="Model" defaultOpen={false}>
         <Slider label="Exploded View" value={Math.round(s.exploded * 100)} suffix="%" onChange={(v) => s.setExploded(v / 100)} />
         <Slider label="Pipeline Opacity" value={Math.round(s.pipelineOpacity * 100)} suffix="%" onChange={(v) => s.setPipelineOpacity(v / 100)} />
         <Toggle label="Section View" on={s.sectionView} onClick={s.toggleSectionView} />
-      </Section>
+      </CollapsibleSection>
 
       <Section title="Traffic Visualization">
         <div className="grid grid-cols-2 gap-2">

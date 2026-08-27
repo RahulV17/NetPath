@@ -476,8 +476,8 @@ export class NetPathEngine {
     return STATION_NAMES.map((_name: string, i: number) => {
       if (!running) {
         return {
-          packetSize: 'â€”', headerType: HEADER_BY_STATION[i], flowHash: 'â€”',
-          offloadTarget: 'â€”', trafficClass: 'â€”', queueDepth: 0, latencyUs: 0,
+          packetSize: '-', headerType: HEADER_BY_STATION[i], flowHash: '-',
+          offloadTarget: '-', trafficClass: '-', queueDepth: 0, latencyUs: 0,
         }
       }
       const base = 120 + i * 38
@@ -486,12 +486,12 @@ export class NetPathEngine {
         headerType: HEADER_BY_STATION[i],
         flowHash: (0x1000 + ((i * 2654435761) % 0xefff)).toString(16).padStart(4, '0'),
         offloadTarget:
-          i < 4 ? 'â€”'
+          i < 4 ? '-'
           : i === 4 ? `${this.stats.hwCacheUsed} cached`
           : i === 7 ? 'NIC Tx'
           : this.stats.fastPathCount > this.stats.slowPathCount ? 'HW NIC' : 'CPU fast path',
         trafficClass:
-          i < 3 ? 'â€”'
+          i < 3 ? '-'
           : ['VOICE', 'VIDEO', 'BULK', 'BEST'][i % 4],
         queueDepth: i === 6 ? this.stats.queueDepth : 0,
         latencyUs: Number((base + this.stats.queueDepth * 12).toFixed(1)),

@@ -241,6 +241,20 @@ export default function LabPage() {
   }, [soundEnabled])
   useEffect(() => () => disposeAudio(), [])
 
+  // Keyboard shortcut: H toggles both desktop panels
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return
+      if (e.key === 'h' || e.key === 'H') {
+        const s = useLab.getState()
+        s.toggleDesktopControl()
+        s.toggleDesktopReadout()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
   const recordChallengeResult = (scenario: string, correct: boolean) => {
     setChallengeResults((prev) => [...prev.slice(-11), { scenario, correct }])
   }

@@ -33,8 +33,9 @@ function Station({ index }: { index: number }) {
   }, [opacity])
 
   // Active-station emissive pulse — draws the eye to the focused stage.
+  const prefersReducedMotion = useMemo(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches, [])
   useFrame(({ clock }) => {
-    if (!selected || !glowRef.current) return
+    if (!selected || !glowRef.current || prefersReducedMotion) return
     const p = 0.55 + Math.sin(clock.elapsedTime * 3) * 0.25
     const gm = glowRef.current.material as THREE.MeshStandardMaterial
     gm.emissiveIntensity = p
@@ -192,7 +193,7 @@ function Packets({ engine }: { engine: NetPathEngine }) {
       }
       dummy.position.set(
         STATION_X[0] + p.progress * ((STATION_X[7] - STATION_X[0]) / 7), y, z)
-      dummy.scale.setScalar((p.kind === 'bulk' ? 1.15 : p.kind === 'video' ? 0.85 : p.kind === 'voice' ? 0.55 : 0.4) * (p.traced ? 1.6 : 1))
+      dummy.scale.setScalar((p.kind === 'bulk' ? 1.15 : p.kind === 'video' ? 0.85 : p.kind === 'voice' ? 0.7 : 0.55) * (p.traced ? 1.6 : 1))
       dummy.updateMatrix()
       mesh.setMatrixAt(drawn, dummy.matrix)
 
