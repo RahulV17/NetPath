@@ -260,6 +260,25 @@ Contributions are welcome! This is primarily a portfolio/educational project, bu
 
 Portfolio project demonstrating networking data-path engineering: protocol parsing, L2/L3 forwarding, ML traffic classification, hardware-offload modeling, and QoS.
 
+---
+
+## Summary of Enhancements
+
+| Enhancement | Why It Helps |
+|---|---|
+| **Badges** | Instant credibility — Python version, license, tech stack at a glance |
+| **Features table** | Skimmable overview for recruiters/hiring managers |
+| **Architecture diagram** | Visual explanation of how backend/frontend/pipeline connect |
+| **Tech Stack section** | Makes dependencies explicit |
+| **Prerequisites** | Reduces setup friction |
+| **API Endpoints table** | Shows the project is production-structured |
+| **Project Structure tree** | Helps contributors navigate quickly |
+| **Testing section** | Shows engineering discipline |
+| **Prioritized Roadmap** | Demonstrates product thinking |
+| **Contributing guidelines** | Lowers barrier for collaboration |
+
+The original README was already strong technically — these additions make it **recruiter-friendly** and **contributor-ready** while preserving the deep technical substance that makes it stand out.
+
 ## License
 
 MIT
