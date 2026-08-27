@@ -1,0 +1,40 @@
+# ── Python ───────────────────────────────────────────────
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.benchmarks/
+
+# ── Hypothesis fuzz corpus ───────────────────────────────
+.hypothesis/
+
+# ── Node / frontend ──────────────────────────────────────
+node_modules/
+web/node_modules/
+web/dist/
+*.tsbuildinfo
+
+# ── Editor / OS ──────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ── Logs / runtime artifacts ─────────────────────────────
+*.log
+uvicorn_err.log
+uvicorn_out.log
+
+# ── Secrets (never commit) ───────────────────────────────
+.env
+.env.*
+*.secret
