@@ -57,6 +57,7 @@ export interface SimPacket {
   traced: boolean
   hash: string
   iatSec: number
+  bornAtSec: number
 }
 
 export interface EngineStats {
@@ -83,7 +84,7 @@ function makePool(): SimPacket[] {
     active: false, progress: 0, speed: 0,
     kind: 'control' as PacketKind, sizeB: 96,
     fastPath: false, dropped: false, dropStation: null,
-    traced: false, hash: '', iatSec: 0,
+    traced: false, hash: '', iatSec: 0, bornAtSec: 0,
   }))
 }
 
@@ -335,7 +336,7 @@ export class NetPathEngine {
       this.spawnDebt += dt * (2 + rateNorm * 38)
       while (this.spawnDebt >= 1) {
         this.spawnDebt -= 1
-        this.spawn(mode, sizeDist)
+        this.spawn(mode, sizeDist, now)
       }
     } else if (!this.packets.some((p) => p.active)) {
       this.stats.queueDepth = 0
@@ -421,7 +422,7 @@ export class NetPathEngine {
     }
   }
 
-  private spawn(mode: TrafficMode, sizeDist = 0.5) {
+  private spawn(mode: TrafficMode, sizeDist = 0.5, bornAtSec: number) {
     const slot = this.packets.find((q) => !q.active)
     if (!slot) return
     slot.active = true
@@ -434,6 +435,7 @@ export class NetPathEngine {
     slot.dropStation = null
     slot.traced = false
     slot.hash = shortHash()
+    slot.bornAtSec = bornAtSec
     ;(slot as any)._aclChecked = false
     ;(slot as any)._classified = false
     ;(slot as any)._offloadDecided = false
@@ -477,7 +479,7 @@ export class NetPathEngine {
       if (!running) {
         return {
           packetSize: '-', headerType: HEADER_BY_STATION[i], flowHash: '-',
-          offloadTarget: '-', trafficClass: '-', queueDepth: 0, latencyUs: 0,
+          offloadTarget: '-', trafficClass: '-', queueDepth: 0, latencyMs: 0,
         }
       }
       const base = 120 + i * 38
@@ -494,7 +496,7 @@ export class NetPathEngine {
           i < 3 ? '-'
           : ['VOICE', 'VIDEO', 'BULK', 'BEST'][i % 4],
         queueDepth: i === 6 ? this.stats.queueDepth : 0,
-        latencyUs: Number((base + this.stats.queueDepth * 12).toFixed(1)),
+        latencyMs: Number((base + this.stats.queueDepth * 12).toFixed(1)),
       }
     })
   }
@@ -503,6 +505,8 @@ export class NetPathEngine {
     const p = this.packets.find((q) => q.traced && q.active)
     if (!p) return null
     const st = Math.min(7, Math.floor(p.progress))
+    const now = performance.now() / 1000
+    const elapsedMs = p.bornAtSec ? Number(((now - p.bornAtSec) * 1000).toFixed(1)) : 0
     return {
       station: st,
       headerType: HEADER_BY_STATION[st],
@@ -510,7 +514,7 @@ export class NetPathEngine {
       offloadTarget: p.fastPath ? 'HW NIC' : st >= 4 ? 'CPU fast path' : null,
       trafficClass: st >= 3 ? 'VOICE' : null,
       queueDepth: st === 6 ? this.stats.queueDepth : 0,
-      latencyUs: Number((p.progress * 45).toFixed(1)),
+      latencyMs: elapsedMs,
       packetSizeB: p.sizeB,
     }
   }

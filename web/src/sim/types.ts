@@ -22,7 +22,7 @@ export interface PacketEvent {
   offloadTarget: OffloadTarget | null
   trafficClass: TrafficClass | null
   queueDepth: number
-  latencyUs: number
+  latencyMs: number
   packetSizeB: number
 }
 
@@ -34,7 +34,7 @@ export interface StationReadout {
   offloadTarget: string
   trafficClass: string
   queueDepth: number
-  latencyUs: number
+  latencyMs: number
 }
 
 /** Flow record mirroring the Python FlowFeatures. */

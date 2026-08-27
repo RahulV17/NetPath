@@ -260,7 +260,7 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
             <span className="text-[#9d978a]">Size</span>
             <span className="text-right text-[#e8e0cc]">{tracedInfo.packetSizeB} B</span>
             <span className="text-[#9d978a]">Latency</span>
-            <span className="text-right text-[#e8e0cc]">{tracedInfo.latencyUs.toFixed(1)} us</span>
+            <span className="text-right text-[#e8e0cc]">{tracedInfo.latencyMs.toFixed(1)} ms</span>
           </div>
         )}
       </Section>

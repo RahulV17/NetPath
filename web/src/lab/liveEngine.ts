@@ -110,7 +110,7 @@ export function mapToReadouts(snap: BackendSnapshot): StationReadout[] {
       : i >= 3 ? '—'
       : '—',
     queueDepth: i === 6 ? realQueue : 0,
-    latencyUs: Number(((120 + i * 38) + latency * 0.1).toFixed(1)),
+    latencyMs: Number((((120 + i * 38) + latency * 0.1) / 1000).toFixed(1)),
   }))
 }
 

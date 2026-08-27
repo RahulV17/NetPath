@@ -39,7 +39,7 @@ export interface StationReadout {
   offloadTarget: string
   trafficClass: string
   queueDepth: number
-  latencyUs: number
+  latencyMs: number
 }
 
 export type CameraPreset =
@@ -170,7 +170,7 @@ function makeReadouts(): StationReadout[] {
     offloadTarget: '—',
     trafficClass: '—',
     queueDepth: 0,
-    latencyUs: 0,
+    latencyMs: 0,
   }))
 }
 
