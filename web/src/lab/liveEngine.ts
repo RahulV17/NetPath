@@ -118,6 +118,7 @@ export function mapToReadouts(snap: BackendSnapshot): StationReadout[] {
 export class LiveEngineClient {
   private ws: WebSocket | null = null
   private retryTimer: ReturnType<typeof setTimeout> | null = null
+  private connectTimer: ReturnType<typeof setTimeout> | null = null
 
   constructor(
     private onSnapshot: (snap: BackendSnapshot) => void,
@@ -133,15 +134,30 @@ export class LiveEngineClient {
       return
     }
 
-    this.ws.onopen = () => this.onStatus(true)
+    // If the handshake never completes, treat it as a failed connect
+    // instead of leaving the UI permanently on "connecting…".
+    this.connectTimer = setTimeout(() => {
+      this.connectTimer = null
+      if (this.ws && this.ws.readyState !== WebSocket.OPEN) {
+        try { this.ws.close() } catch { /* ignore */ }
+      }
+    }, 3000)
+
+    this.ws.onopen = () => {
+      if (this.connectTimer) { clearTimeout(this.connectTimer); this.connectTimer = null }
+      this.onStatus(true)
+    }
     this.ws.onclose = () => {
-      this.onStatus(false)
+      if (this.connectTimer) { clearTimeout(this.connectTimer); this.connectTimer = null }
       this.ws = null
       this.scheduleRetry()
     }
-    this.ws.onerror = () => this.ws?.close()
+    this.ws.onerror = () => {
+      // onclose follows onerror; if it doesn't, ensure retry eventually.
+      if (!this.connectTimer) this.scheduleRetry()
+    }
     this.ws.onmessage = (ev) => {
-      if (typeof ev.data !== 'string') return // null/pong frames crash JSON.parse
+      if (typeof ev.data !== 'string') return
       try {
         this.onSnapshot(JSON.parse(ev.data))
       } catch { /* ignore malformed frames */ }

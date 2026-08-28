@@ -130,9 +130,15 @@ async def health() -> dict:
 @app.get("/api/stats")
 async def get_stats() -> dict:
     """Get current system statistics."""
+    qos_stats: dict | None = None
+    try:
+        qos_stats = datapath.traffic_mgr.stats  # type: ignore[attr-defined]
+    except Exception:
+        qos_stats = {"error": "qos_stats_unavailable"}
+
     return {
         "datapath": datapath.stats,
-        "qos": datapath.traffic_mgr.stats,
+        "qos": qos_stats,
         "analytics": {
             "protocol_distribution": analytics.get_protocol_distribution(),
             "throughput": analytics.get_throughput(),
