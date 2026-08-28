@@ -95,6 +95,14 @@ class AnalyticsEngine:
         }
 
 
+def _safe_qos_stats(traffic_mgr) -> dict:
+    """Best-effort QoS stats; never let telemetry kill the websocket stream."""
+    try:
+        return traffic_mgr.stats  # type: ignore[attr-defined]
+    except Exception:
+        return {"error": "qos_stats_unavailable"}
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 # FASTAPI APPLICATION
 # ═══════════════════════════════════════════════════════════════════════════
@@ -271,12 +279,12 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
     try:
         while True:
             # Real per-flow telemetry for the web lab's readouts
-            flow_stats = datapath.flow_table.snapshot(top=5)
+            flow_stats = await datapath.flow_table.snapshot(top=5)
 
             stats = {
                 "timestamp": time.time(),
                 "datapath": datapath.stats,
-                "qos": datapath.traffic_mgr.stats,
+                "qos": _safe_qos_stats(datapath.traffic_mgr),
                 "analytics": {
                     "protocol_distribution": analytics.get_protocol_distribution(),
                     "throughput": analytics.get_throughput(),
@@ -291,12 +299,6 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
             await asyncio.sleep(0.1)
     except WebSocketDisconnect:
         pass
-    except Exception:
-        # Abrupt TCP resets raise ConnectionClosedError/BrokenResourceError,
-        # not just WebSocketDisconnect — don't leak sockets/log noise.
-        pass
-    finally:
-        try:
-            await websocket.close()
-        except Exception:
-            pass
+    except Exception as exc:
+        # Surface telemetry crashes instead of silently closing.
+        print(f"[ws] live stream error: {type(exc).__name__}: {exc}")

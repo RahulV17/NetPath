@@ -294,7 +294,7 @@ class FlowTable:
         """
         return list(self._flows.values())
 
-    def snapshot(self, top: int = 5) -> dict:
+    async def snapshot(self, top: int = 5) -> dict:
         """Rich flow telemetry for API/WebSocket consumers.
 
         Returns counts, per-class distribution, and the busiest flows
@@ -306,7 +306,7 @@ class FlowTable:
         # Iterate a snapshot under the lock — the live dict mutates from
         # other coroutines (update/get_or_create), which raised
         # "dictionary changed size during iteration" under load.
-        with self._lock:
+        async with self._lock:
             items = list(self._flows.items())
         for key, f in items:
             tc = self._classifications.get(key)
