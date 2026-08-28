@@ -13,11 +13,11 @@ export function WebglFallback() {
         <line x1="40" y1="110" x2="860" y2="110" stroke="#30363d" strokeWidth="26" />
         {[
           ['0 Ingress', '#8b949e'],
-          ['1 Parser', '#58a6ff'],
-          ['2 ACL', '#f85149'],
+          ['1 Parser', '#6fc7e8'],
+          ['2 ACL', '#6fc7e8'],
           ['3 ML', '#bc8cff'],
           ['4 Offload', '#39d353'],
-          ['5 L2/L3', '#58a6ff'],
+          ['5 L2/L3', '#6fc7e8'],
           ['6 QoS', '#ffa657'],
           ['7 Egress', '#e6edf3'],
         ].map(([label, color], i) => {

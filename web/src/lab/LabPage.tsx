@@ -49,7 +49,7 @@ function Header() {
           <div className="font-mono text-[10px] tracking-[0.3em] text-[#b08d57]">
             THE PACKET ENGINE No. 01
           </div>
-          <h1 className="mt-1 font-serif text-2xl text-[#e8e0cc]">
+          <h1 className="mt-1 font-display text-2xl text-[#e8e0cc]">
             NetPath · Network Data Path Lab
           </h1>
           <p className="mt-1 max-w-xl text-xs leading-relaxed text-[#9d978a]">
@@ -61,7 +61,7 @@ function Header() {
           <div className="font-mono text-[10px] tracking-widest text-[#9d978a]">
             CHAPTER {chapter + 1} OF 6
           </div>
-          <p className="mt-1 font-serif text-sm leading-snug text-[#e8e0cc]">{ch.q}</p>
+          <p className="mt-1 font-display text-sm leading-snug text-[#e8e0cc]">{ch.q}</p>
           <p className="mt-1 text-[11px] text-[#9d978a]">{ch.tip}</p>
           <div className="mt-2 flex justify-end gap-2">
             <button

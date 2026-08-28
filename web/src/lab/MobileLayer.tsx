@@ -52,7 +52,7 @@ export function DesktopHint() {
 
   return (
     <div
-      className="pointer-events-auto absolute inset-x-3 top-[104px] z-30 flex items-start gap-2 rounded border border-[#6fc7e8]/40 bg-[rgba(7,9,12,0.88)] px-3 py-2 backdrop-blur md:hidden"
+      className="pointer-events-auto absolute inset-x-3 top-[104px] z-30 flex items-start gap-2 rounded border border-[#6fc7e8]/40 bg-panel px-3 py-2 backdrop-blur md:hidden"
       role="status"
     >
       <p className="flex-1 text-[11px] leading-relaxed text-[#e8e0cc]">
@@ -91,7 +91,7 @@ function MobileBars() {
         onClick={() => openControlPanel(isMobile)}
         aria-expanded={false}
         aria-controls="control-desk"
-        className="rounded-lg border border-[#30363d] bg-[rgba(7,9,12,0.9)] py-3 font-mono text-[11px] text-[#e8e0cc] backdrop-blur"
+        className="rounded-lg border border-default bg-panel py-3 font-mono text-[11px] text-bone backdrop-blur"
       >
         Open Data Path Controls
         <span className="ml-1 text-[#6fc7e8]">{pathState} · Rate {rate}%</span>
@@ -100,7 +100,7 @@ function MobileBars() {
         onClick={() => openReadout(isMobile)}
         aria-expanded={false}
         aria-controls="engine-readout"
-        className="rounded-lg border border-[#30363d] bg-[rgba(7,9,12,0.9)] py-3 font-mono text-[11px] text-[#e8e0cc] backdrop-blur"
+        className="rounded-lg border border-default bg-panel py-3 font-mono text-[11px] text-bone backdrop-blur"
       >
         Station Data · Ingress
       </button>

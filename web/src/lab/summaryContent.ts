@@ -45,7 +45,7 @@ export function drawSummaryCard(
   g.fillText('T H E   P A C K E T   E N G I N E   ·   N o . 0 1', W / 2, 78)
 
   g.fillStyle = '#e8e0cc'
-  g.font = '600 34px "Source Serif 4", Georgia, serif'
+  g.font = '600 34px "Playfair Display", Georgia, serif'
   g.fillText('NetPath · Network Data Path Lab', W / 2, 122)
 
   g.fillStyle = '#9d978a'
@@ -123,7 +123,7 @@ export function drawSummaryCard(
 
   // Closing insight — spec §4 line
   g.fillStyle = '#f2c45f'
-  g.font = 'italic 500 16px "Source Serif 4", Georgia, serif'
+  g.font = 'italic 500 16px "Playfair Display", Georgia, serif'
   g.textAlign = 'center'
   g.fillText(
     'I finally understand: the classifier learns behavior, hardware accelerates',

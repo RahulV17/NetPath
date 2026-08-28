@@ -152,12 +152,12 @@ export function ChallengeModal({ engine, open, onClose, onResult }: Props) {
   return (
     <div
       id="fault-challenge"
-      className="absolute bottom-4 left-1/2 z-30 w-[min(560px,calc(100vw-24px))] -translate-x-1/2 rounded-lg border border-[#b08d57]/60 bg-[rgba(7,9,12,0.92)] p-4 backdrop-blur"
+      className="absolute bottom-4 left-1/2 z-30 w-[min(560px,calc(100vw-24px))] -translate-x-1/2 rounded-lg border border-nickel/60 bg-panel p-4 backdrop-blur"
       role="dialog"
       aria-label="Fault Challenge"
     >
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="font-serif text-sm text-[#e8e0cc]">Fault Challenge</h3>
+        <h3 className="font-display text-sm text-bone">Fault Challenge</h3>
         <button
           onClick={close}
           aria-label="Close fault challenge"

@@ -10,8 +10,8 @@ import { useLiveEngineBridge } from './useLiveEngine'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="border-b border-[#1c2530] px-4 py-3">
-      <h3 className="mb-2 font-mono text-[10px] tracking-[0.25em] text-[#b08d57]">
+    <section className="border-subtle border-b px-4 py-3">
+      <h3 className="mb-2 type-micro text-[#b08d57]">
         {title.toUpperCase()}
       </h3>
       {children}
@@ -116,7 +116,7 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
   return (
     <aside
       id="control-desk"
-      className="absolute bottom-4 left-4 top-28 z-20 w-64 overflow-y-auto rounded-lg border border-[#30363d] bg-[rgba(7,9,12,0.84)] backdrop-blur"
+      className="panel absolute bottom-4 left-4 top-28 z-20 w-64 overflow-y-auto"
       aria-label="Data path controls"
     >
       <Section title="Data Path">
@@ -139,45 +139,45 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
           </button>
         </div>
         <Slider label="Packet Rate" value={s.packetRate} suffix="%" onChange={s.setPacketRate} />
-        <div className="grid grid-cols-2 gap-x-3 gap-y-1 font-mono text-[10px] text-[#9d978a]">
-          <span>Path State</span><span className="text-right text-[#6fc7e8]" aria-live="polite">{s.pathState}</span>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1 font-mono text-[10px] text-bone-dim">
+          <span>Path State</span><span className="text-right text-air" aria-live="polite">{s.pathState}</span>
           {liveAttached ? (
             <>
               <span>Packet Rate (real)</span>
-              <span className="text-right text-[#39d353]">{s.livePps} pps</span>
+              <span className="text-right text-success">{s.livePps} pps</span>
               <span>Active Flows (real)</span>
-              <span className="text-right text-[#e8e0cc]">{s.liveFlowCount ?? s.activeFlows} flows</span>
+              <span className="text-right text-bone">{s.liveFlowCount ?? s.activeFlows} flows</span>
               {s.liveDominantClass && (
                 <>
                   <span>Dominant Class</span>
-                  <span className="text-right text-[#bc8cff]">{s.liveDominantClass}</span>
+                  <span className="text-right text-purple">{s.liveDominantClass}</span>
                 </>
               )}
               <span>Throughput (real)</span>
-              <span className="text-right text-[#39d353]">
+              <span className="text-right text-success">
                 {s.throughputGbps.toFixed(3)} Gbps / {(s.throughputGbps * 125).toFixed(1)} MB/s
               </span>
             </>
           ) : (
             <>
               <span>Active Flows</span>
-              <span className="text-right text-[#e8e0cc]">{s.activeFlows} (Norm.)</span>
+              <span className="text-right text-bone">{s.activeFlows} (Norm.)</span>
               <span>Throughput</span>
-              <span className="text-right text-[#e8e0cc]">Approx. {s.throughputGbps.toFixed(2)} Gbps / {(s.throughputGbps * 125).toFixed(0)} MB/s</span>
+              <span className="text-right text-bone">Approx. {s.throughputGbps.toFixed(2)} Gbps / {(s.throughputGbps * 125).toFixed(0)} MB/s</span>
             </>
           )}
         </div>
-        <div className="mt-2 border-t border-[#1c2530] pt-2">
+        <div className="mt-2 border-subtle border-t pt-2">
           <button
             onClick={() => s.setLiveEngineAttached(!liveAttached)}
             aria-pressed={liveAttached}
             aria-label="Attach to live Python engine telemetry"
             className={`w-full rounded border px-2 py-1.5 font-mono text-[10px] tracking-wide transition-colors ${
               liveStatus === 'live'
-                ? 'border-[#39d353] bg-[#39d353]/10 text-[#39d353]'
+                ? 'border-success bg-success/10 text-success'
                 : liveStatus === 'connecting'
-                  ? 'border-[#f2c45f] bg-[#f2c45f]/10 text-[#f2c45f]'
-                  : 'border-[#30363d] text-[#9d978a] hover:border-[#b08d57]'
+                  ? 'border-warning bg-warning/10 text-warning'
+                  : 'border-default text-bone-dim hover:text-bone'
             }`}
           >
             {liveStatus === 'live'
@@ -186,7 +186,7 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
                 ? '◐ Connecting to backend…'
                 : '○ Attach Live Engine'}
           </button>
-          <p className="mt-1 font-mono text-[9px] leading-relaxed text-[#484f58]">
+          <p className="mt-1 font-mono text-[9px] leading-relaxed text-bone-muted">
             {liveStatus === 'live'
               ? 'Readouts show real backend stats (uvicorn :8000).'
               : liveStatus === 'connecting'

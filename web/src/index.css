@@ -1,5 +1,5 @@
 /* Editorial typography per spec §8 — @import must precede all rules */
-@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Playfair+Display:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,15 +7,19 @@
 
 :root {
   --void: #05070a;
+  --surface: #0b0f14;
   --panel: rgba(7, 9, 12, 0.84);
   --bone: #e8e0cc;
   --bone-dim: #9d978a;
+  --bone-muted: #484f58;
   --titanium: #8e979e;
   --nickel: #b08d57;
   --air: #6fc7e8;
-  --hot: #f08a4b;
-  --flame: #f2c45f;
+  --success: #39d353;
+  --warning: #f2c45f;
   --danger: #d45f49;
+  --purple: #bc8cff;
+  --orange: #ffa657;
 }
 
 body {
@@ -23,11 +27,10 @@ body {
   -webkit-font-smoothing: antialiased;
   background: var(--void);
   color: var(--bone);
-  /* spec §7: prevent horizontal scroll + accidental zoom on mobile */
   overscroll-behavior: none;
 }
 
-.font-serif { font-family: 'Source Serif 4', Georgia, serif; }
+.font-display { font-family: 'Playfair Display', Georgia, serif; }
 .font-mono, code, pre { font-family: 'JetBrains Mono', Consolas, monospace; }
 
 /* Focus visibility (spec §10) — outline only; border-radius here visibly
@@ -45,6 +48,48 @@ body {
   }
 }
 
+/* ── Design tokens: semantic text colors ── */
+.text-bone { color: var(--bone); }
+.text-bone-dim { color: var(--bone-dim); }
+.text-bone-muted { color: var(--bone-muted); }
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-danger { color: var(--danger); }
+.text-purple { color: var(--purple); }
+.text-orange { color: var(--orange); }
+.text-air { color: var(--air); }
+.text-nickel { color: var(--nickel); }
+.text-titanium { color: var(--titanium); }
+
+/* ── Design tokens: surfaces & borders ── */
+.bg-surface { background-color: var(--surface); }
+.border-subtle { border-color: #1c2530; }
+.border-default { border-color: #30363d; }
+
+/* ── Design tokens: focus ring ── */
+:focus-visible {
+  outline: 2px solid var(--air);
+  outline-offset: 2px;
+}
+
+/* ── Panel shell ── */
+.panel {
+  border-radius: 0.5rem;
+  border: 1px solid #30363d;
+  background: rgba(7, 9, 12, 0.84);
+  backdrop-filter: blur(8px);
+}
+
+/* ── Micro type scale ── */
+.type-micro {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 0.62rem;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: #12181f; }
 ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
