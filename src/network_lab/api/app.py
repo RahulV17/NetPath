@@ -150,6 +150,7 @@ async def get_stats() -> dict:
         "analytics": {
             "protocol_distribution": analytics.get_protocol_distribution(),
             "throughput": analytics.get_throughput(),
+            "window_entries": len(analytics.distribution_window),
         },
         "ml": {
             "flow_table_size": datapath.flow_table.size,
@@ -280,7 +281,6 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
         while True:
             # Real per-flow telemetry for the web lab's readouts
             flow_stats = await datapath.flow_table.snapshot(top=5)
-
             stats = {
                 "timestamp": time.time(),
                 "datapath": datapath.stats,
