@@ -281,7 +281,7 @@ function CameraRig() {
       target={target}
       enablePan={false}
       enableDamping
-      dampingFactor={0.08}
+      dampingFactor={0.12}
       minDistance={14}
       maxDistance={110}
       onStart={() => { userInteracting.current = true }}

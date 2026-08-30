@@ -68,7 +68,7 @@ function Header() {
               onClick={() => setChapter(chapter - 1)}
               disabled={chapter === 0}
               aria-label="Previous Chapter"
-              className="rounded border border-[#30363d] px-2 py-1 font-mono text-[10px] text-[#e8e0cc] disabled:opacity-30 hover:border-[#b08d57]"
+              className="rounded border border-[#30363d] px-2 py-1 font-mono text-[10px] text-bone disabled:opacity-30 hover:border-nickel focus-visible:border-cyan"
             >
               PREV
             </button>
@@ -76,7 +76,7 @@ function Header() {
               onClick={() => setChapter(chapter + 1)}
               disabled={chapter === 5}
               aria-label="Next Chapter"
-              className="rounded border border-[#30363d] px-2 py-1 font-mono text-[10px] text-[#e8e0cc] disabled:opacity-30 hover:border-[#b08d57]"
+              className="rounded border border-[#30363d] px-2 py-1 font-mono text-[10px] text-bone disabled:opacity-30 hover:border-nickel focus-visible:border-cyan"
             >
               NEXT
             </button>

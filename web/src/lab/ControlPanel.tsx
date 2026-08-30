@@ -45,10 +45,10 @@ function Slider({
   suffix?: string; onChange: (v: number) => void
 }) {
   return (
-    <label className="mb-2 block text-xs text-[#b6c2cf]">
+    <label className="mb-2 block text-xs text-titanium">
       <span className="flex justify-between font-mono text-[11px]">
         <span>{label}</span>
-        <span className="text-[#e8e0cc]">{value}{suffix}</span>
+        <span className="text-bone">{value}{suffix}</span>
       </span>
       <input
         type="range" min={min} max={max} step={step} value={value}
