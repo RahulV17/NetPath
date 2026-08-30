@@ -35,8 +35,10 @@ export function useLiveEngineBridge() {
         // Real per-flow telemetry from FlowTable.snapshot
         const flowCount = snap.flows?.count ?? snap.ml?.flow_table_size ?? 0
         const domClass = dominantClass(snap.flows?.classified)
-        // Real packet rate → display Gbps at ~1500 B avg frame
-        const gbps = Number(((pps * 1500 * 8) / 1e9).toFixed(3))
+        const bps = snap.analytics?.throughput?.bytes_per_second
+        const gbps = bps != null
+          ? Number(((bps * 8) / 1e9).toFixed(3))
+          : Number(((pps * 1500 * 8) / 1e9).toFixed(3))
         useLab.setState({
           throughputGbps: gbps,
           activeFlows: flowCount,

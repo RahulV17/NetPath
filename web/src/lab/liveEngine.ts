@@ -27,7 +27,7 @@ export interface BackendSnapshot {
   }
   analytics: {
     protocol_distribution?: Record<string, number>
-    throughput?: { pps?: number }
+    throughput?: { pps?: number; total_bytes?: number; bytes_per_second?: number }
   }
   ml?: { flow_table_size?: number }
   hw_offload?: {

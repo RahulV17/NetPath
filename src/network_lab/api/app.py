@@ -64,6 +64,7 @@ class AnalyticsEngine:
     def __init__(self):
         self.protocol_counts: dict = defaultdict(int)
         self.distribution_window: deque = deque(maxlen=10000)
+        self.total_bytes: int = 0
         self._lock = asyncio.Lock()
 
     async def ingest(self, pkt: ParsedPacket, meta=None) -> None:
@@ -79,19 +80,26 @@ class AnalyticsEngine:
             elif pkt.arp:
                 proto = "ARP"
             self.protocol_counts[proto] += 1
-            self.distribution_window.append((pkt.timestamp, proto))
+            self.distribution_window.append((pkt.timestamp, proto, len(pkt.raw)))
+            self.total_bytes += len(pkt.raw)
 
     def get_protocol_distribution(self) -> dict:
         return dict(self.protocol_counts)
 
+    def get_total_bytes(self) -> int:
+        return self.total_bytes
+
     def get_throughput(self, window_seconds: float = 10.0) -> dict:
         now = time.time()
         cutoff = now - window_seconds
-        recent = [p for t, p in self.distribution_window if t > cutoff]
+        recent = [p for t, p, _ in self.distribution_window if t > cutoff]
+        recent_bytes = sum(b for _, _, b in self.distribution_window if _ > cutoff)
         return {
             "pps": len(recent) / window_seconds,
             "protocols": {p: recent.count(p) for p in set(recent)},
             "window": window_seconds,
+            "total_bytes": self.total_bytes,
+            "bytes_per_second": recent_bytes / window_seconds if window_seconds > 0 else 0.0,
         }
 
 
