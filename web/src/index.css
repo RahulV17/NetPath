@@ -48,6 +48,17 @@ body {
   }
 }
 
+/* Focus ring consistency — subtle token-aligned outline */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--void), 0 0 0 4px var(--cyan);
+}
+
+/* Smooth default transitions for interactive elements */
+button, input, select {
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
 /* ── Design tokens: semantic text colors ── */
 .text-bone { color: var(--bone); }
 .text-bone-dim { color: var(--bone-dim); }
