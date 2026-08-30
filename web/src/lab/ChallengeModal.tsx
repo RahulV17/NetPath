@@ -135,6 +135,12 @@ export function ChallengeModal({ engine, open, onClose, onResult }: Props) {
 
   if (!open) return null
 
+  // Focus management: focus the dialog itself on open
+  useEffect(() => {
+    const node = document.getElementById('fault-challenge')
+    node?.focus()
+  }, [open])
+
   const close = () => {
     cleanupScenario()
     onClose()
@@ -154,7 +160,9 @@ export function ChallengeModal({ engine, open, onClose, onResult }: Props) {
       id="fault-challenge"
       className="absolute bottom-4 left-1/2 z-30 w-[min(560px,calc(100vw-24px))] -translate-x-1/2 rounded-lg border border-nickel/60 bg-panel p-4 backdrop-blur"
       role="dialog"
+      aria-modal
       aria-label="Fault Challenge"
+      tabIndex={-1}
     >
       <div className="mb-3 flex items-center justify-between">
         <h3 className="font-display text-sm text-bone">Fault Challenge</h3>

@@ -8,10 +8,10 @@ import { useLiveEngineBridge } from './useLiveEngine'
 
 // ── Left control panel ───────────────────────────────────────────────────
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, sectionId }: { title: string; children: React.ReactNode; sectionId?: string }) {
   return (
-    <section className="border-subtle border-b px-4 py-3">
-      <h3 className="mb-2 type-micro text-[#b08d57]">
+    <section className="border-subtle border-b px-4 py-3" id={sectionId}>
+      <h3 className="mb-2 type-micro text-nickel">
         {title.toUpperCase()}
       </h3>
       {children}
@@ -19,19 +19,21 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-function CollapsibleSection({ title, children, defaultOpen = true }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) {
+function CollapsibleSection({ title, children, defaultOpen = true, sectionId }: { title: string; children: React.ReactNode; defaultOpen?: boolean; sectionId?: string }) {
   const [open, setOpen] = useState(defaultOpen)
+  const contentId = sectionId ? `${sectionId}-content` : undefined
   return (
-    <section className="border-b border-[#1c2530]">
+    <section className="border-subtle border-b">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-4 py-2.5 text-left font-mono text-[10px] tracking-[0.25em] text-[#b08d57] hover:text-[#e8e0cc]"
+        className="flex w-full items-center justify-between px-4 py-2.5 text-left font-mono text-[10px] tracking-[0.25em] text-nickel hover:text-bone"
         aria-expanded={open}
+        aria-controls={contentId}
       >
         {title.toUpperCase()}
-        <span className="text-[#9d978a]">{open ? '▾' : '▸'}</span>
+        <span className="text-bone-muted">{open ? '▾' : '▸'}</span>
       </button>
-      {open && <div className="px-4 pb-3">{children}</div>}
+      {open && <div id={contentId} className="px-4 pb-3">{children}</div>}
     </section>
   )
 }
@@ -119,13 +121,13 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
       className="panel absolute bottom-4 left-4 top-28 z-20 w-64 overflow-y-auto"
       aria-label="Data path controls"
     >
-      <Section title="Data Path">
+      <Section title="Data Path" sectionId="section-data-path">
         <div className="mb-2 grid grid-cols-2 gap-2">
           <button
             onClick={s.start}
             disabled={s.pathState !== 'Idle'}
             aria-label="Start"
-            className="rounded border border-[#39d353] bg-[#39d353]/10 py-1.5 font-mono text-[11px] text-[#39d353] disabled:opacity-30"
+            className="rounded border border-success bg-success/10 py-1.5 font-mono text-[11px] text-success disabled:opacity-30"
           >
             ▶ Start
           </button>
@@ -169,6 +171,7 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
         </div>
         <div className="mt-2 border-subtle border-t pt-2">
           <button
+            id="live-engine-toggle"
             onClick={() => s.setLiveEngineAttached(!liveAttached)}
             aria-pressed={liveAttached}
             aria-label="Attach to live Python engine telemetry"
@@ -186,7 +189,7 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
                 ? '◐ Connecting to backend…'
                 : '○ Attach Live Engine'}
           </button>
-          <p className="mt-1 font-mono text-[9px] leading-relaxed text-bone-muted">
+          <p id="live-engine-status" className="mt-1 font-mono text-[9px] leading-relaxed text-bone-muted">
             {liveStatus === 'live'
               ? 'Readouts show real backend stats (uvicorn :8000).'
               : liveStatus === 'connecting'

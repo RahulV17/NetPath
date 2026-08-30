@@ -19,8 +19,22 @@ export function StationReadout() {
           <button
             key={st.id}
             role="tab"
+            id={`station-tab-${st.id}`}
             aria-selected={selected === st.id}
+            aria-controls="station-panel"
             onClick={() => selectStation(st.id)}
+            onKeyDown={(e) => {
+              const ids = STATIONS.map(s => s.id)
+              const idx = ids.indexOf(st.id)
+              let next = -1
+              if (e.key === 'ArrowRight') next = (idx + 1) % ids.length
+              if (e.key === 'ArrowLeft') next = (idx - 1 + ids.length) % ids.length
+              if (next !== -1) {
+                e.preventDefault()
+                selectStation(ids[next])
+                document.getElementById(`station-tab-${ids[next]}`)?.focus()
+              }
+            }}
             className={`shrink-0 px-3 py-2 font-mono text-[10px] tracking-wide transition-colors ${
               selected === st.id
                 ? 'border-b-2 border-warning text-bone'
@@ -32,7 +46,7 @@ export function StationReadout() {
         ))}
       </div>
 
-      <div className="px-4 py-3">
+      <div id="station-panel" role="tabpanel" className="px-4 py-3">
         <div className="mb-1 flex items-baseline justify-between">
           <h3 className="font-display text-sm text-bone">
             Station {selected} · {STATIONS[selected].name}
