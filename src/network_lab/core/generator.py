@@ -82,7 +82,7 @@ class PacketCrafter:
                      dst_ip: str = "10.0.0.1",
                      src_port: int = 12345,
                      dst_port: int = 80) -> bytes:
-        pkt = Ether(dst=GeneratorConfig.dst_mac) / IP(src=src_ip, dst=dst_ip) / TCP(
+        pkt = Ether(src=GeneratorConfig.src_mac, dst=GeneratorConfig.dst_mac) / IP(src=src_ip, dst=dst_ip) / TCP(
             sport=src_port, dport=dst_port, flags="S", seq=random.randint(0, 0xFFFFFFFF)
         )
         return bytes(pkt)
@@ -93,7 +93,7 @@ class PacketCrafter:
                       src_port: int = 12345,
                       dst_port: int = 80,
                       payload: bytes = b"GET / HTTP/1.1\r\nHost: test\r\n\r\n") -> bytes:
-        pkt = Ether(dst=GeneratorConfig.dst_mac) / IP(src=src_ip, dst=dst_ip) / TCP(
+        pkt = Ether(src=GeneratorConfig.src_mac, dst=GeneratorConfig.dst_mac) / IP(src=src_ip, dst=dst_ip) / TCP(
             sport=src_port, dport=dst_port, flags="PA",
             seq=random.randint(0, 0xFFFFFFFF), ack=random.randint(0, 0xFFFFFFFF)
         ) / Raw(payload)
@@ -105,7 +105,7 @@ class PacketCrafter:
                  src_port: int = 12345,
                  dst_port: int = 53,
                  payload: bytes = b"\x00" * 32) -> bytes:
-        pkt = Ether(dst=GeneratorConfig.dst_mac) / IP(src=src_ip, dst=dst_ip) / UDP(
+        pkt = Ether(src=GeneratorConfig.src_mac, dst=GeneratorConfig.dst_mac) / IP(src=src_ip, dst=dst_ip) / UDP(
             sport=src_port, dport=dst_port
         ) / Raw(payload)
         return bytes(pkt)
@@ -115,7 +115,7 @@ class PacketCrafter:
                        dst_ip: str = "10.0.0.1",
                        ident: int = 1,
                        seq: int = 1) -> bytes:
-        pkt = Ether(dst=GeneratorConfig.dst_mac) / IP(src=src_ip, dst=dst_ip) / ICMP(
+        pkt = Ether(src=GeneratorConfig.src_mac, dst=GeneratorConfig.dst_mac) / IP(src=src_ip, dst=dst_ip) / ICMP(
             type=8, id=ident, seq=seq
         ) / Raw(b"ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         return bytes(pkt)
@@ -125,7 +125,7 @@ class PacketCrafter:
                  dst_ip: str = "2001:db8::2",
                  src_port: int = 12345,
                  dst_port: int = 80) -> bytes:
-        pkt = Ether(dst=GeneratorConfig.dst_mac) / IPv6(src=src_ip, dst=dst_ip) / TCP(
+        pkt = Ether(src=GeneratorConfig.src_mac, dst=GeneratorConfig.dst_mac) / IPv6(src=src_ip, dst=dst_ip) / TCP(
             sport=src_port, dport=dst_port, flags="S"
         )
         return bytes(pkt)
@@ -135,7 +135,7 @@ class PacketCrafter:
         pkt = Ether(src=src_mac, dst="ff:ff:ff:ff:ff:ff") / IP(
             src="0.0.0.0", dst="255.255.255.255"
         ) / UDP(sport=68, dport=67) / BOOTP(
-            op=1, htype=1, hlen=6, xid=random.randint(0, 0xFFFFFFFF),
+            op=1, htype=1, hlen=1, xid=random.randint(0, 0xFFFFFFFF),
             chaddr=bytes.fromhex(src_mac.replace(":", "")) + b"\x00" * 10,
         ) / DHCP(
             options=[("message-type", "discover"), "end"]
@@ -149,7 +149,7 @@ class PacketCrafter:
         inner = Ether(src=inner_src, dst=inner_dst) / IP(
             src="192.168.1.10", dst="192.168.1.20"
         ) / TCP(sport=54321, dport=80, flags="S")
-        pkt = Ether(dst=GeneratorConfig.dst_mac) / IP(src="10.0.0.1", dst="10.0.0.2") / UDP(
+        pkt = Ether(src=GeneratorConfig.src_mac, dst=GeneratorConfig.dst_mac) / IP(src="10.0.0.1", dst="10.0.0.2") / UDP(
             sport=12345, dport=4789
         ) / VXLAN(vni=vni) / inner
         return bytes(pkt)
@@ -160,7 +160,7 @@ class PacketCrafter:
         inner = IP(src="192.168.1.10", dst="192.168.1.20") / TCP(
             sport=12345, dport=80, flags="S"
         )
-        pkt = Ether(dst=GeneratorConfig.dst_mac) / IP(src=src_ip, dst=dst_ip) / GRE(proto=0x0800) / inner
+        pkt = Ether(src=GeneratorConfig.src_mac, dst=GeneratorConfig.dst_mac) / IP(src=src_ip, dst=dst_ip) / GRE(proto=0x0800) / inner
         return bytes(pkt)
 
     @staticmethod
@@ -179,8 +179,7 @@ class PacketCrafter:
     def wifi_qos_data(src: str = "00:11:22:33:44:aa",
                       dst: str = "00:11:22:33:44:bb",
                       bssid: str = "00:11:22:33:44:55") -> bytes:
-        pkt = Dot11(type=2, subtype=8, addr1=dst, addr2=src,
-                    addr3=bssid, SC=0x10) / Raw(b"\x00" * 32)
+        pkt = Dot11(type=2, subtype=8, addr1=dst, addr2=src, addr3=bssid, SC=0x10) / Raw(b"\x00" * 32)
         return bytes(pkt)
 
 
