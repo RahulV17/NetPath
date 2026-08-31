@@ -93,7 +93,7 @@ class AnalyticsEngine:
         now = time.time()
         cutoff = now - window_seconds
         recent = [p for t, p, _ in self.distribution_window if t > cutoff]
-        recent_bytes = sum(b for _, _, b in self.distribution_window if _ > cutoff)
+        recent_bytes = sum(b for ts, _, b in self.distribution_window if ts > cutoff)
         return {
             "pps": len(recent) / window_seconds,
             "protocols": {p: recent.count(p) for p in set(recent)},
@@ -308,5 +308,6 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
     except WebSocketDisconnect:
         pass
     except Exception as exc:
-        # Surface telemetry crashes instead of silently closing.
+        import traceback
+        traceback.print_exc()
         print(f"[ws] live stream error: {type(exc).__name__}: {exc}")
