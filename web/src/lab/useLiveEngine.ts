@@ -29,17 +29,16 @@ export function useLiveEngineBridge() {
     const client = new LiveEngineClient(
       (snap) => {
         const s = useLab.getState()
-        s.setLiveEngineStatus('live')
-        s.pushReadouts(mapToReadouts(snap))
         const pps = snap.analytics?.throughput?.pps ?? 0
-        // Real per-flow telemetry from FlowTable.snapshot
         const flowCount = snap.flows?.count ?? snap.ml?.flow_table_size ?? 0
         const domClass = dominantClass(snap.flows?.classified)
         const bps = snap.analytics?.throughput?.bytes_per_second
-        const gbps = bps != null
+        const gbps = bps != null && bps > 0
           ? Number(((bps * 8) / 1e9).toFixed(3))
-          : Number(((pps * 1500 * 8) / 1e9).toFixed(3))
+          : 0
+        s.pushReadouts(mapToReadouts(snap))
         useLab.setState({
+          liveEngineStatus: 'live',
           throughputGbps: gbps,
           activeFlows: flowCount,
           liveFlowCount: flowCount,

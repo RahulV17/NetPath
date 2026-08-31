@@ -78,7 +78,9 @@ export function DesktopHint() {
 function MobileBars() {
   const openControlPanel = useLab((s) => s.openControlPanel)
   const openReadout = useLab((s) => s.openReadout)
-  const pathState = useLab((s) => s.pathState)   // reactive — getState() froze the chip
+  const isControlPanelOpen = useLab((s) => s.isControlPanelOpen)
+  const isReadoutOpen = useLab((s) => s.isReadoutOpen)
+  const pathState = useLab((s) => s.pathState)
   const rate = useLab((s) => s.packetRate)
   const isMobile = useIsMobile()
 
@@ -89,7 +91,7 @@ function MobileBars() {
     >
       <button
         onClick={() => openControlPanel(isMobile)}
-        aria-expanded={false}
+        aria-expanded={isControlPanelOpen}
         aria-controls="control-desk"
         className="rounded-lg border border-default bg-panel py-3 font-mono text-[11px] text-bone backdrop-blur"
       >
@@ -98,7 +100,7 @@ function MobileBars() {
       </button>
       <button
         onClick={() => openReadout(isMobile)}
-        aria-expanded={false}
+        aria-expanded={isReadoutOpen}
         aria-controls="engine-readout"
         className="rounded-lg border border-default bg-panel py-3 font-mono text-[11px] text-bone backdrop-blur"
       >

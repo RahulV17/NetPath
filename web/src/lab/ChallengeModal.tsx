@@ -51,7 +51,7 @@ const SCENARIOS: Scenario[] = [
     options: [
       'A bridge loop is flooding duplicate frames across every port.',
       'The MAC learning table aged out all entries at once.',
-      'Correct — the classifier lost its training signal and began mislabeling bulk traffic as voice, causing queue starvation.',
+      'The classifier lost its training signal and began mislabeling bulk traffic as voice, causing queue starvation.',
       'TTL expired on every packet because the routing table was empty.',
     ],
     // Spec copy places the correct explanation at index 2 in this scenario

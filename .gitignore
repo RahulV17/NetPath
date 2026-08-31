@@ -38,3 +38,5 @@ uvicorn_out.log
 .env
 .env.*
 *.secret
+# Added by code-review-graph
+.code-review-graph/

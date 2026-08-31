@@ -143,7 +143,7 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
         <Slider label="Packet Rate" value={s.packetRate} suffix="%" onChange={s.setPacketRate} />
         <div className="grid grid-cols-2 gap-x-3 gap-y-1 font-mono text-[10px] text-bone-dim">
           <span>Path State</span><span className="text-right text-air" aria-live="polite">{s.pathState}</span>
-          {liveAttached ? (
+          {liveStatus === 'live' ? (
             <>
               <span>Packet Rate (real)</span>
               <span className="text-right text-success">{s.livePps} pps</span>
@@ -159,6 +159,15 @@ export function ControlPanel({ engine, challengeOpen, onToggleChallenge, challen
               <span className="text-right text-success">
                 {s.throughputGbps.toFixed(3)} Gbps / {(s.throughputGbps * 125).toFixed(1)} MB/s
               </span>
+            </>
+          ) : liveAttached ? (
+            <>
+              <span>Packet Rate (connecting)</span>
+              <span className="text-right text-warning">— pps</span>
+              <span>Active Flows (connecting)</span>
+              <span className="text-right text-bone">— flows</span>
+              <span>Throughput (connecting)</span>
+              <span className="text-right text-warning">— Gbps</span>
             </>
           ) : (
             <>

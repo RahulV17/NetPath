@@ -33,8 +33,7 @@ body {
 .font-display { font-family: 'Playfair Display', Georgia, serif; }
 .font-mono, code, pre { font-family: 'JetBrains Mono', Consolas, monospace; }
 
-/* Focus visibility (spec §10) — outline only; border-radius here visibly
-   reshaped focused elements */
+/* Focus visibility (spec §10) — single source of truth */
 :focus-visible {
   outline: 2px solid var(--air);
   outline-offset: 2px;
@@ -46,12 +45,6 @@ body {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* Focus ring consistency — subtle token-aligned outline */
-:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--void), 0 0 0 4px var(--cyan);
 }
 
 /* Smooth default transitions for interactive elements */
@@ -76,12 +69,6 @@ button, input, select {
 .bg-surface { background-color: var(--surface); }
 .border-subtle { border-color: #1c2530; }
 .border-default { border-color: #30363d; }
-
-/* ── Design tokens: focus ring ── */
-:focus-visible {
-  outline: 2px solid var(--air);
-  outline-offset: 2px;
-}
 
 /* ── Panel shell ── */
 .panel {

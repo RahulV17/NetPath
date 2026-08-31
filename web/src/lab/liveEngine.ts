@@ -93,7 +93,7 @@ export function mapToReadouts(snap: BackendSnapshot): StationReadout[] {
 
   return HEADERS.map((header, i) => ({
     packetSize:
-      i === 1 && topFlow ? `${topFlow.avg_size} B` : `${64 + ((i * 137) % 900)} B`,
+      i === 1 && topFlow ? `${topFlow.avg_size} B` : '—',
     headerType: header,
     flowHash:
       i >= 3 && topFlow
@@ -110,7 +110,7 @@ export function mapToReadouts(snap: BackendSnapshot): StationReadout[] {
       : i >= 3 ? '—'
       : '—',
     queueDepth: i === 6 ? realQueue : 0,
-    latencyMs: Number((((120 + i * 38) + latency * 0.1) / 1000).toFixed(1)),
+    latencyMs: Number((latency / 1000).toFixed(1)),
   }))
 }
 

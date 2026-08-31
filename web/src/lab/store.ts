@@ -28,7 +28,7 @@ export const STATIONS = [
   { id: 3, name: 'ML Classifier' },
   { id: 4, name: 'HW Offload Engine' },
   { id: 5, name: 'L2/L3 Forwarder' },
-  { id: 6, 'name': 'QoS Shaper' },
+  { id: 6, name: 'QoS Shaper' },
   { id: 7, name: 'Egress' },
 ] as const
 
