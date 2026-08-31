@@ -17,15 +17,12 @@
   </a>
 </p>
 
-<!-- HERO SCREENSHOT: Full-width, centered, with subtle rounded border feel via spacing -->
 <p align="center">
-  <img src="https://raw.githubusercontent.com/RahulV17/NetPath/main/docs/screenshots/clip_20260828_111708_1.png" 
-       alt="NetPath 3D Network Data Path Lab" 
-       width="92%" 
-       style="border-radius: 8px;">
-</p>
-<p align="center">
-  <i>🧪 The 3D Network Data Path Lab — trace a packet from Ingress through all 7 pipeline stages to Egress.</i>
+  <img src="https://raw.githubusercontent.com/RahulV17/NetPath/main/docs/screenshots/clip_20260828_111745_3.png" 
+       alt="NetPath Interactive 3D Lab" 
+       width="90%">
+  <br>
+  <sub><b>🧪 Interactive 3D Lab</b> — Traffic visualization, per-station telemetry, and live packet tracing.</sub>
 </p>
 
 ---
@@ -174,22 +171,24 @@ python -m network_lab.demo
 
 ## Screenshots
 
-<p align="center">
-  <!-- Side-by-side gallery: both images same height, equal spacing -->
-  <img src="https://raw.githubusercontent.com/RahulV17/NetPath/main/docs/screenshots/clip_20260828_111708_1.png" 
-       alt="3D Pipeline Overview" 
-       width="48%" 
-       style="border-radius: 6px;">
-  &nbsp;
-  <img src="https://raw.githubusercontent.com/RahulV17/NetPath/main/docs/screenshots/clip_20260828_111745_3.png" 
-       alt="Interactive Lab with Control Panels" 
-       width="48%" 
-       style="border-radius: 6px;">
-</p>
-<p align="center">
-  <b>Left:</b> 3D Pipeline Overview — all 7 stages from Ingress to Egress &nbsp;|&nbsp; 
-  <b>Right:</b> Interactive Mode — Traffic Visualization panel + per-station telemetry
-</p>
+<table align="center">
+  <tr>
+    <td align="center" width="50%">
+      <img src="https://raw.githubusercontent.com/RahulV17/NetPath/main/docs/screenshots/clip_20260828_111708_1.png" width="100%">
+      <br>
+      <sub><b>3D Pipeline Overview</b></sub>
+      <br>
+      <sub>All 7 stages from Ingress → Protocol Parser → ACL Filter → ML Classifier → HW Offload → L2/L3 Forwarder → QoS Shaper → Egress</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="https://raw.githubusercontent.com/RahulV17/NetPath/main/docs/screenshots/clip_20260828_111745_3.png" width="100%">
+      <br>
+      <sub><b>Interactive Lab Mode</b></sub>
+      <br>
+      <sub>Traffic Visualization panel, camera controls, and per-station telemetry readouts</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
